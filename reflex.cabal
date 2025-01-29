@@ -186,6 +186,9 @@ library
   if flag(debug-propagation)
     cpp-options: -DDEBUG -DDEBUG_TRACE_PROPAGATION -DDEBUG_TRACE_INVALIDATION
 
+  if flag(dont-use-applicative-dynamic)
+    cpp-options: -DDONT_USE_APPLICATIVE_DYNAMIC
+
   if flag(debug-cycles)
     cpp-options: -DDEBUG_CYCLES
 
