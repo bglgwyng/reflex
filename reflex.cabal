@@ -56,6 +56,11 @@ flag debug-propagation
   default: False
   manual: True
 
+flag dont-use-applicative-dynamic
+  description: Don't use the applicative instance for Dynamic, use the monadic one instead
+  default: False
+  manual: True
+
 flag debug-cycles
   description: Enable debugging of event cycles
   default: False
