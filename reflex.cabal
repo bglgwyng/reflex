@@ -56,6 +56,11 @@ flag debug-propagation
   default: False
   manual: True
 
+flag dont-use-applicative-dynamic
+  description: Don't use the applicative instance for Dynamic, use the monadic one instead
+  default: False
+  manual: True
+
 flag debug-cycles
   description: Enable debugging of event cycles
   default: False
@@ -180,6 +185,9 @@ library
 
   if flag(debug-propagation)
     cpp-options: -DDEBUG -DDEBUG_TRACE_PROPAGATION -DDEBUG_TRACE_INVALIDATION
+
+  if flag(dont-use-applicative-dynamic)
+    cpp-options: -DDONT_USE_APPLICATIVE_DYNAMIC
 
   if flag(debug-cycles)
     cpp-options: -DDEBUG_CYCLES
