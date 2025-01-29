@@ -2582,12 +2582,16 @@ mapDynamicSpider f = SpiderDynamic . newMapDyn f . unSpiderDynamic
 
 instance HasSpiderTimeline x => Applicative (Reflex.Class.Dynamic (SpiderTimeline x)) where
   pure = SpiderDynamic . dynamicConst
+#if DONT_USE_APPLICATIVE_DYNAMIC
+  df <*> dx = df >>= \f -> dx >>= \x -> pure (f x)
+#else
 #if MIN_VERSION_base(4,10,0)
   liftA2 f a b = SpiderDynamic $ Reflex.Spider.Internal.zipDynWith f (unSpiderDynamic a) (unSpiderDynamic b)
 #endif
   SpiderDynamic a <*> SpiderDynamic b = SpiderDynamic $ Reflex.Spider.Internal.zipDynWith ($) a b
   a *> b = R.unsafeBuildDynamic (R.sample $ R.current b) $ R.leftmost [R.updated b, R.tag (R.current b) $ R.updated a]
   (<*) = flip (*>) -- There are no effects, so order doesn't matter
+#endif
 
 holdSpiderEventM :: HasSpiderTimeline x => a -> Reflex.Class.Event (SpiderTimeline x) a -> EventM x (Reflex.Class.Behavior (SpiderTimeline x) a)
 holdSpiderEventM v0 e = fmap (SpiderBehavior . behaviorHoldIdentity) $ Reflex.Spider.Internal.hold v0 $ coerce $ unSpiderEvent e
